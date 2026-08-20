@@ -5,6 +5,8 @@ on:
     paths:
       - ".github/workflows/bootstrap-v2.yml"
       - "scripts/bootstrap_v2.py"
+  issues:
+    types: [opened]
   workflow_dispatch:
 
 permissions:
@@ -12,6 +14,7 @@ permissions:
 
 jobs:
   build:
+    if: github.event_name != 'issues' || startsWith(github.event.issue.title, '[bootstrap-v2]')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout target repo
