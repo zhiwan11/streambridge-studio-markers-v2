@@ -153,6 +153,11 @@ SVG_LOGOS = {
 # All other services receive a high-contrast brand card instead of the old
 # unreadable generic white card.
 BRAND_STYLES = {
+    # These upstream disc-format entries live in the streaming group. The
+    # generic light card made their white wordmarks look like an empty pill
+    # on the player's dark glass background, so keep them high contrast.
+    "Ultra HD Blu-ray": ("ULTRA HD BLU-RAY", "#D8B55B", "#090A0D", "#232630"),
+    "Blu-ray Disc": ("BLU-RAY", "#FFFFFF", "#071B3B", "#0A5FC7"),
     "爱奇艺": ("iQIYI", "#00BE06", "#E9FFE9", "#D5F9DA"),
     "腾讯视频": ("Tencent Video", "#00A8E8", "#EAFBFF", "#D8F4FF"),
     "WeTV": ("WeTV", "#00C878", "#EBFFF6", "#D7F8E9"),
@@ -560,7 +565,7 @@ app.get("/badges.json", (req, res) => {
     filters: badgeBase.filters.map((filter) => {
       if (filter.groupId !== "gs") return filter;
       const asset = `stream-${String(streamIndex++).padStart(3, "0")}.svg`;
-      return { ...filter, imageURL: `${origin}/badges/streaming-fixed/${asset}` };
+      return { ...filter, imageURL: `${origin}/badges/streaming-fixed/${asset}?v=3.0.1` };
     }),
   };
   res.setHeader("Access-Control-Allow-Origin", "*");
