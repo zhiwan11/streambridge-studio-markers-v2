@@ -15,8 +15,7 @@ assert len(assets) == 144
 
 for asset in assets:
     text = asset.read_text(encoding="utf-8")
-    assert 'width="320"' in text
-    assert 'height="112"' in text
+    assert text.startswith("<svg")
     assert 'href="http' not in text
     assert "/badges-v2/" not in text
 
@@ -36,12 +35,20 @@ assert "#F47521" in svg("Crunchyroll")
 assert "#00A1D6" in svg("哔哩哔哩")
 assert "data:image/svg+xml;base64," in svg("哔哩哔哩")
 assert "<text" not in svg("哔哩哔哩")
-assert "#071B3B" in svg("Blu-ray Disc")
-assert "#0A5FC7" in svg("Blu-ray Disc")
-assert "#FFFFFF" in svg("Blu-ray Disc")
-assert ">BLU-RAY</text>" in svg("Blu-ray Disc")
-assert "#090A0D" in svg("Ultra HD Blu-ray")
-assert "#D8B55B" in svg("Ultra HD Blu-ray")
-assert ">ULTRA HD BLU-RAY</text>" in svg("Ultra HD Blu-ray")
+for disc_name in ("Blu-ray Disc", "Ultra HD Blu-ray"):
+    disc_svg = svg(disc_name)
+    assert "data:image/svg+xml;base64," in disc_svg
+    assert "<rect" not in disc_svg
+    assert "<text" not in disc_svg
+    encoded = disc_svg.split("base64,", 1)[1].split('"', 1)[0]
+    embedded = __import__("base64").b64decode(encoded).decode("utf-8")
+    assert 'fill="#FFFFFF"' in embedded
+    assert "#0095D5" not in embedded
+    assert "#0096D6" not in embedded
+
+assert 'width="210"' in svg("Blu-ray Disc")
+assert 'height="112"' in svg("Blu-ray Disc")
+assert 'width="290"' in svg("Ultra HD Blu-ray")
+assert 'height="100"' in svg("Ultra HD Blu-ray")
 
 print("badges_test.py: 144 self-contained badges passed")

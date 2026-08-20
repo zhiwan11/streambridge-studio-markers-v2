@@ -149,15 +149,28 @@ SVG_LOGOS = {
     ),
 }
 
+# Disc-format marks are technical badges, not streaming-provider cards. Keep
+# their official vector silhouette, recolour it for the dark player UI, and
+# preserve a compact intrinsic aspect ratio so they align with 4K/HDR badges.
+TRANSPARENT_SVG_LOGOS = {
+    "Blu-ray Disc": (
+        "blu-ray-disc.svg",
+        "https://upload.wikimedia.org/wikipedia/commons/1/14/Blu-ray_Disc.svg",
+        210,
+        112,
+    ),
+    "Ultra HD Blu-ray": (
+        "ultra-hd-blu-ray.svg",
+        "https://upload.wikimedia.org/wikipedia/commons/2/21/Ultra_HD_Blu-ray_%28logo%29.svg",
+        290,
+        100,
+    ),
+}
+
 
 # All other services receive a high-contrast brand card instead of the old
 # unreadable generic white card.
 BRAND_STYLES = {
-    # These upstream disc-format entries live in the streaming group. The
-    # generic light card made their white wordmarks look like an empty pill
-    # on the player's dark glass background, so keep them high contrast.
-    "Ultra HD Blu-ray": ("ULTRA HD BLU-RAY", "#D8B55B", "#090A0D", "#232630"),
-    "Blu-ray Disc": ("BLU-RAY", "#FFFFFF", "#071B3B", "#0A5FC7"),
     "爱奇艺": ("iQIYI", "#00BE06", "#E9FFE9", "#D5F9DA"),
     "腾讯视频": ("Tencent Video", "#00A8E8", "#EAFBFF", "#D8F4FF"),
     "WeTV": ("WeTV", "#00C878", "#EBFFF6", "#D7F8E9"),
@@ -238,9 +251,29 @@ def image_card(name: str, image_bytes: bytes, mime_type: str = "image/png") -> s
     return card_shell(name, content)
 
 
+def transparent_white_logo(name: str, image_bytes: bytes, width: int, height: int) -> str:
+    source = image_bytes.decode("utf-8")
+    source = re.sub(r'fill="#[0-9A-Fa-f]{6}"', 'fill="#FFFFFF"', source)
+    encoded = base64.b64encode(source.encode("utf-8")).decode("ascii")
+    return f'''<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}" role="img" aria-label="{html.escape(name)}">
+  <image x="0" y="0" width="{width}" height="{height}" preserveAspectRatio="xMidYMid meet"
+    href="data:image/svg+xml;base64,{encoded}"/>
+</svg>'''
+
+
 for index, item in enumerate(streaming_filters):
     name = item.get("name", "")
     card = None
+    transparent_logo = TRANSPARENT_SVG_LOGOS.get(name)
+    if transparent_logo:
+        logo_file, logo_url, width, height = transparent_logo
+        cache_path = LOGO_CACHE / logo_file
+        try:
+            if not cache_path.exists():
+                cache_path.write_bytes(fetch_bytes(logo_url))
+            card = transparent_white_logo(name, cache_path.read_bytes(), width, height)
+        except Exception as exc:
+            print(f"[transparent vector logo fallback] {name}: {exc}")
     vector_logo = SVG_LOGOS.get(name)
     if vector_logo:
         logo_file, logo_url = vector_logo
@@ -565,7 +598,7 @@ app.get("/badges.json", (req, res) => {
     filters: badgeBase.filters.map((filter) => {
       if (filter.groupId !== "gs") return filter;
       const asset = `stream-${String(streamIndex++).padStart(3, "0")}.svg`;
-      return { ...filter, imageURL: `${origin}/badges/streaming-fixed/${asset}?v=3.0.1` };
+      return { ...filter, imageURL: `${origin}/badges/streaming-fixed/${asset}?v=3.0.2` };
     }),
   };
   res.setHeader("Access-Control-Allow-Origin", "*");
