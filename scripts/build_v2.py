@@ -18,7 +18,7 @@ PUBLIC = ROOT / "public"
 STREAMING_DIR = PUBLIC / "badges" / "streaming-fixed"
 LOGO_CACHE = DATA / "logo-cache"
 BASE_JSON = DATA / "badges-base.json"
-BASE_JSON_GZ = DATA / "badges-base.json.gz"
+BASE_JSON_GZ_B64 = DATA / "badges-base.json.gz.b64"
 RULES_JSON = DATA / "streaming-rules.json"
 
 # Pin upstream so a future StreamBridge change cannot silently break our patches.
@@ -62,12 +62,13 @@ def replace_once(path: Path, old: str, new: str, label: str) -> None:
     path.write_text(text.replace(old, new, 1), encoding="utf-8")
 
 
-if not BASE_JSON.exists() and BASE_JSON_GZ.exists():
-    BASE_JSON.write_bytes(gzip.decompress(BASE_JSON_GZ.read_bytes()))
+if not BASE_JSON.exists() and BASE_JSON_GZ_B64.exists():
+    compressed = base64.b64decode(BASE_JSON_GZ_B64.read_text(encoding="ascii"))
+    BASE_JSON.write_bytes(gzip.decompress(compressed))
 
 if not BASE_JSON.exists():
     raise RuntimeError(
-        "data/badges-base.json.gz is required; it is the pinned rule snapshot and must be committed"
+        "data/badges-base.json.gz.b64 is required; it is the pinned rule snapshot and must be committed"
     )
 
 restore_upstream()
