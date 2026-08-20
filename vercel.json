@@ -1,0 +1,4 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "installCommand": "rm -rf /tmp/streambridge && git clone --depth 1 https://github.com/h4harsimran/streambridge.git /tmp/streambridge && rsync -a --exclude='.git' /tmp/streambridge/ ./ && python3 scripts/build_v2.py && npm install --ignore-scripts"
+}
