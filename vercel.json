@@ -1,6 +1,16 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "buildCommand": "python3 scripts/build_v2.py",
-  "outputDirectory": "public",
-  "installCommand": "npm install --ignore-scripts"
+  "buildCommand": "npm run build",
+  "installCommand": "npm install --ignore-scripts",
+  "functions": {
+    "api/index.js": {
+      "includeFiles": "{data,lib,public}/**"
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/api"
+    }
+  ]
 }

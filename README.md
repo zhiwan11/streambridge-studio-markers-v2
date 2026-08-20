@@ -1,22 +1,56 @@
-# StreamBridge Studio Markers v2
+# StreamBridge Studio Markers v3
 
-Patched StreamBridge build for BetterFormatter streaming-platform badges.
+StreamBridge build for BetterFormatter streaming-platform badges.
 
-## Fixes
+## Provider resolution
 
-- Fixes broken Netflix / Apple TV / Hulu / Prime Video / HBO Max / Disney+ / Paramount+ / Peacock / Crunchyroll artwork by generating self-contained badge cards at build time. The SVG no longer references a removed `/badges-v2/*` asset.
-- Keeps the original 245 filters, 15 groups and 144 Source / Streaming rules.
-- Adds Emby `Studios` fallback without asking the user for another Emby API key.
-- Priority is always: `filename provider > Emby Studio provider > no provider`.
+The resolver uses the existing Emby/Jellyfin connection and applies this strict priority:
 
-If a filename already contains `NF`, `AppleTV`, etc., the filename wins. If it contains no known platform, StreamBridge checks the already-fetched Emby item/series `Studios` and appends the matching invisible marker before BetterFormatter sees the media filename.
+1. explicit provider in the media-source filename;
+2. current movie/episode `Studios`;
+3. parent series `Studios`;
+4. no provider badge.
 
-Important: a Studio fallback can only identify a platform when Emby's `Studios` metadata itself contains a recognizable platform name such as `Apple TV+`, `Netflix`, `Hulu`, `Prime Video`, etc. A production-company-only value such as `Tropper Ink Productions` cannot by itself prove the streaming service.
+No additional Emby, Jellyfin, TMDB, API-key, server, or token setting is required.
+The original filename is retained as `rawFilename`. An invisible provider marker is
+added only to `behaviorHints.filename`, which is the value BetterFormatter matches.
 
-## Deployment
+Examples:
 
-Vercel runs `scripts/build_v2.py` during the install step. The script pulls the clean upstream `h4harsimran/streambridge`, preserves the current badge rule pack, patches the Emby data path, generates the streaming artwork and exports the Express app for Vercel.
+- `NF` in the filename wins over a series Studio of `Apple TV+`.
+- a provider-free filename with `Studios: [{ "Name": "iQIYI" }]` receives the
+  existing iQIYI hidden marker and displays the iQIYI badge.
+- an episode with no Studios falls back to its series Studios.
 
-After deployment, import:
+## Artwork
 
-`https://<your-v2-vercel-domain>/badges.json`
+The build creates 144 self-contained `320x112` SVG badges. Major platforms use
+embedded coloured wordmarks; every remaining provider receives a high-contrast
+brand card. No SVG references the removed `/badges-v2/*` assets or a nested
+remote image.
+
+Domestic vector sources: [iQIYI](https://commons.wikimedia.org/wiki/File:IQIYI_logo_(2022).svg),
+[Bilibili](https://commons.wikimedia.org/wiki/File:Bilibili_2023.svg),
+[Youku](https://commons.wikimedia.org/wiki/File:Youku_logo_(2).svg),
+[WeTV](https://commons.wikimedia.org/wiki/File:WeTV_logo.svg), and
+[AcFun](https://commons.wikimedia.org/wiki/File:AcFun.svg). The AcFun artwork is
+credited to Beijing Danmu Network Technology Co., Ltd. under CC BY 2.5; the
+other listed wordmarks are public-domain text/geometric logos on Commons.
+
+## Build and test
+
+```bash
+npm test
+```
+
+The build restores the small pinned upstream StreamBridge source, applies the
+Emby and Jellyfin patches, generates the provider rule table, creates the badge
+assets, and runs resolver and artwork checks.
+
+Production badge URL:
+
+`https://streambridge-studio-markers.vercel.app/badges.json`
+
+Set `STREAM_PROVIDER_DEBUG=1` only while diagnosing metadata. Debug records show
+item IDs, item/series Studios, filename, final provider, and marker status; they
+never log server URLs, API keys, tokens, or credentials.

@@ -1,0 +1,8 @@
+node_modules/
+/data/badges-base.json
+data/logo-cache/
+data/streaming-rules.json
+public/badges/
+/public/configure.html
+/index.js
+/lib/
