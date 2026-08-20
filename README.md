@@ -1,11 +1,22 @@
 # StreamBridge Studio Markers v2
 
-Clean badge-hosting project for BetterFormatter / resource badge imports.
+Patched StreamBridge build for BetterFormatter streaming-platform badges.
 
-This repository is used for the repaired streaming-platform badge pack. It keeps the original matching rules while moving streaming artwork to stable self-hosted assets.
+## Fixes
 
-## Priority
+- Fixes broken Netflix / Apple TV / Hulu / Prime Video / HBO Max / Disney+ / Paramount+ / Peacock / Crunchyroll artwork by generating self-contained badge cards at build time. The SVG no longer references a removed `/badges-v2/*` asset.
+- Keeps the original 245 filters, 15 groups and 144 Source / Streaming rules.
+- Adds Emby `Studios` fallback without asking the user for another Emby API key.
+- Priority is always: `filename provider > Emby Studio provider > no provider`.
 
-`filename provider > Emby Studio provider > no provider`
+If a filename already contains `NF`, `AppleTV`, etc., the filename wins. If it contains no known platform, StreamBridge checks the already-fetched Emby item/series `Studios` and appends the matching invisible marker before BetterFormatter sees the media filename.
 
-The static badge pack handles matching and artwork. Emby `Studios` fallback must be injected by the player / formatter layer that already has access to the current Emby item or series metadata.
+Important: a Studio fallback can only identify a platform when Emby's `Studios` metadata itself contains a recognizable platform name such as `Apple TV+`, `Netflix`, `Hulu`, `Prime Video`, etc. A production-company-only value such as `Tropper Ink Productions` cannot by itself prove the streaming service.
+
+## Deployment
+
+Vercel runs `scripts/build_v2.py` during the install step. The script pulls the clean upstream `h4harsimran/streambridge`, preserves the current badge rule pack, patches the Emby data path, generates the streaming artwork and exports the Express app for Vercel.
+
+After deployment, import:
+
+`https://<your-v2-vercel-domain>/badges.json`
