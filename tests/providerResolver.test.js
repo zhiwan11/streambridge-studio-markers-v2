@@ -93,7 +93,7 @@ assert.equal(alreadyMarked.provider, "Apple TV+");
 assert.equal(alreadyMarked.badgeFilename, appleSeries.badgeFilename);
 
 const aniFilename = resolve("ANi");
-assert.equal(aniFilename.provider, "Ani-One");
+assert.equal(aniFilename.provider, "巴哈姆特動畫瘋");
 assert.equal(aniFilename.source, "filename");
 
 const aniFalsePositive = resolve("Anime.Animation.1080p.WEB-DL");
@@ -103,8 +103,8 @@ const lineTvFilename = resolve("Flaming.Dodgeball.Girl-DL.AVC.AAC-LINETV@UBWEB")
 assert.equal(lineTvFilename.provider, "LINE TV");
 assert.equal(lineTvFilename.source, "filename");
 
-const aniStudio = resolve("1080p.WEB-DL.AVC.AAC", [{ Name: "Medialink" }]);
-assert.equal(aniStudio.provider, "Ani-One");
+const aniStudio = resolve("1080p.WEB-DL.AVC.AAC", [{ Name: "巴哈姆特動畫瘋" }]);
+assert.equal(aniStudio.provider, "巴哈姆特動畫瘋");
 assert.equal(aniStudio.source, "item-studio");
 assert.notEqual(aniStudio.badgeFilename, aniStudio.rawFilename);
 

@@ -45,11 +45,11 @@ assert "apple-only" not in svg("iTunes")
 assert "linearGradient" not in svg("iTunes")
 assert "data:image/svg+xml;base64," in svg("哔哩哔哩")
 assert "<text" not in svg("哔哩哔哩")
-ani_one_svg = svg("Ani-One")
-assert 'aria-label="Ani-One"' in ani_one_svg
-assert "Anı-One" in ani_one_svg
-assert "#E31937" in ani_one_svg
-assert 'id="silver"' in ani_one_svg
+bahamut_anime_svg = svg("巴哈姆特動畫瘋")
+assert 'aria-label="巴哈姆特動畫瘋"' in bahamut_anime_svg
+assert "Ani-One" not in bahamut_anime_svg
+assert "data:image/png;base64," in bahamut_anime_svg
+assert 'width="236"' in bahamut_anime_svg
 line_tv_svg = svg("LINE TV")
 assert 'aria-label="LINE TV"' in line_tv_svg
 assert ">LINE TV</text>" in line_tv_svg

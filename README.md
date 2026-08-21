@@ -36,11 +36,12 @@ Domestic vector sources: [iQIYI](https://commons.wikimedia.org/wiki/File:IQIYI_l
 [AcFun](https://commons.wikimedia.org/wiki/File:AcFun.svg). The AcFun artwork is
 credited to Beijing Danmu Network Technology Co., Ltd. under CC BY 2.5; the
 other listed wordmarks are public-domain text/geometric logos on Commons.
-The Ani-One treatment follows [Medialink's official brand page](https://www.medialink.com.hk/en/Anione.aspx),
-and the LINE TV play geometry is based on the platform's
+The `ANi` source treatment follows the official [Bahamut Anime](https://ani.gamer.com.tw/)
+identity and its [three-tile launch artwork](https://gnn.gamer.com.tw/detail.php?sn=126137).
+The LINE TV play geometry is based on the platform's
 [public-domain text/logo asset](https://commons.wikimedia.org/wiki/File:Linetv-logo.svg).
 
-The v3.0.7 configuration self-hosts transparent, high-contrast technical marks
+The v3.0.8 configuration self-hosts transparent, high-contrast technical marks
 for `60 FPS`, `120 FPS`, `FLAC`, `HQ`, and `HDR Vivid`. The frame-rate rules recognize both
 integer and common fractional rates (`59.94` and `119.88`) without matching
 ordinary numbers elsewhere in the source name.
@@ -49,8 +50,8 @@ All 146 source/provider assets use transparent canvases with enlarged brand
 artwork. The build rejects the former rounded card background, uses an icon-free
 iTunes wordmark, and keeps artwork readable in light and dark UI.
 
-Ani-One and LINE TV are separate provider rules. Standalone `ANi`/`ANI` source
-tokens resolve to Ani-One without matching ordinary words such as `Anime` or
+Bahamut Anime and LINE TV are separate provider rules. Standalone `ANi`/`ANI` source
+tokens resolve to 巴哈姆特動畫瘋 without matching ordinary words such as `Anime` or
 `Animation`; `LINETV`, `LINE-TV`, and `LINE TV` resolve to LINE TV rather than LiTV.
 
 ## Build and test

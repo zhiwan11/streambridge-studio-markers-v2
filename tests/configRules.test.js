@@ -23,18 +23,19 @@ const server = app.listen(0, async () => {
     for (const name of ["60 FPS", "120 FPS", "HQ High Quality", "HDR Vivid", "FLAC"]) {
       const filter = byName.get(name);
       if (!filter) throw new Error(`missing ${name}`);
-      if (!filter.imageURL.includes("?v=3.0.7")) throw new Error(`stale asset version: ${name}`);
+      if (!filter.imageURL.includes("?v=3.0.8")) throw new Error(`stale asset version: ${name}`);
     }
 
-    const aniOne = byName.get("Ani-One");
+    const bahamutAnime = byName.get("巴哈姆特動畫瘋");
     const lineTv = byName.get("LINE TV");
-    if (!aniOne || !lineTv) throw new Error("missing Ani-One or LINE TV");
-    if (!aniOne.imageURL.includes("?v=3.0.7") || !lineTv.imageURL.includes("?v=3.0.7")) {
-      throw new Error("stale Ani-One or LINE TV asset version");
+    if (byName.has("Ani-One")) throw new Error("obsolete Ani-One mapping must be removed");
+    if (!bahamutAnime || !lineTv) throw new Error("missing Bahamut Anime or LINE TV");
+    if (!bahamutAnime.imageURL.includes("?v=3.0.8") || !lineTv.imageURL.includes("?v=3.0.8")) {
+      throw new Error("stale Bahamut Anime or LINE TV asset version");
     }
-    if (!compileFilter(aniOne).test("ANi")) throw new Error("ANi token must match Ani-One");
-    if (compileFilter(aniOne).test("Anime") || compileFilter(aniOne).test("Animation") || compileFilter(aniOne).test("ani")) {
-      throw new Error("Ani-One short token is too broad");
+    if (!compileFilter(bahamutAnime).test("ANi")) throw new Error("ANi token must match Bahamut Anime");
+    if (compileFilter(bahamutAnime).test("Anime") || compileFilter(bahamutAnime).test("Animation") || compileFilter(bahamutAnime).test("ani")) {
+      throw new Error("Bahamut Anime short token is too broad");
     }
     if (!compileFilter(lineTv).test("Flaming.Dodgeball-DL.AVC.AAC-LINETV@UBWEB")) {
       throw new Error("LINETV token must match LINE TV");
