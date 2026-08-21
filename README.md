@@ -37,6 +37,11 @@ Domestic vector sources: [iQIYI](https://commons.wikimedia.org/wiki/File:IQIYI_l
 credited to Beijing Danmu Network Technology Co., Ltd. under CC BY 2.5; the
 other listed wordmarks are public-domain text/geometric logos on Commons.
 
+The v3.0.3 configuration also self-hosts transparent, high-contrast technical
+marks for `60 FPS`, `120 FPS`, and `FLAC`. The frame-rate rules recognize both
+integer and common fractional rates (`59.94` and `119.88`) without matching
+ordinary numbers elsewhere in the source name.
+
 ## Build and test
 
 ```bash

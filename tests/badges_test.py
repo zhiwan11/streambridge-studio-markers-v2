@@ -7,6 +7,7 @@ ROOT = Path(__file__).resolve().parents[1]
 base = json.loads((ROOT / "data" / "badges-base.json").read_text(encoding="utf-8"))
 streaming = [item for item in base["filters"] if item.get("groupId") == "gs"]
 assets = sorted((ROOT / "public" / "badges" / "streaming-fixed").glob("stream-*.svg"))
+technical_dir = ROOT / "public" / "badges" / "technical-fixed"
 
 assert len(base["filters"]) == 245
 assert len(base["groups"]) == 15
@@ -51,4 +52,16 @@ assert 'height="112"' in svg("Blu-ray Disc")
 assert 'width="290"' in svg("Ultra HD Blu-ray")
 assert 'height="100"' in svg("Ultra HD Blu-ray")
 
-print("badges_test.py: 144 self-contained badges passed")
+for technical_asset in ("60-fps.svg", "120-fps.svg", "flac.svg"):
+    technical_svg = (technical_dir / technical_asset).read_text(encoding="utf-8")
+    assert technical_svg.startswith("<svg")
+    assert "#FFFFFF" in technical_svg
+    assert 'href="http://' not in technical_svg
+    assert 'href="https://' not in technical_svg
+    assert "linearGradient" not in technical_svg
+
+assert 'aria-label="60 FPS"' in (technical_dir / "60-fps.svg").read_text(encoding="utf-8")
+assert 'aria-label="120 FPS"' in (technical_dir / "120-fps.svg").read_text(encoding="utf-8")
+assert "FLAC" in (technical_dir / "flac.svg").read_text(encoding="utf-8")
+
+print("badges_test.py: 144 provider/disc + 3 technical badges passed")

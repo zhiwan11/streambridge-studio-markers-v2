@@ -16,6 +16,7 @@ ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data"
 PUBLIC = ROOT / "public"
 STREAMING_DIR = PUBLIC / "badges" / "streaming-fixed"
+TECHNICAL_DIR = PUBLIC / "badges" / "technical-fixed"
 LOGO_CACHE = DATA / "logo-cache"
 BASE_JSON = DATA / "badges-base.json"
 BASE_JSON_GZ_B64 = DATA / "badges-base.json.gz.b64"
@@ -35,6 +36,7 @@ UPSTREAM_FILES = (
 
 DATA.mkdir(parents=True, exist_ok=True)
 STREAMING_DIR.mkdir(parents=True, exist_ok=True)
+TECHNICAL_DIR.mkdir(parents=True, exist_ok=True)
 LOGO_CACHE.mkdir(parents=True, exist_ok=True)
 
 
@@ -259,6 +261,34 @@ def transparent_white_logo(name: str, image_bytes: bytes, width: int, height: in
   <image x="0" y="0" width="{width}" height="{height}" preserveAspectRatio="xMidYMid meet"
     href="data:image/svg+xml;base64,{encoded}"/>
 </svg>'''
+
+
+def fps_badge(rate: int) -> str:
+    """Compact transparent high-frame-rate mark for the dark player UI."""
+    width = 232 if rate == 120 else 190
+    number_width = 162 if rate == 120 else 116
+    return f'''<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="100" viewBox="0 0 {width} 100" role="img" aria-label="{rate} FPS">
+  <g fill="#FFFFFF">
+    <text x="0" y="69" font-family="Arial Black,Arial,Helvetica,sans-serif" font-size="70" font-weight="900" letter-spacing="-5">{rate}</text>
+    <text x="{number_width}" y="47" font-family="Arial,Helvetica,sans-serif" font-size="27" font-weight="900" letter-spacing="-1">FPS</text>
+    <rect x="{number_width}" y="55" width="{width - number_width}" height="6" rx="3"/>
+  </g>
+</svg>'''
+
+
+def flac_badge() -> str:
+    """Transparent lossless-audio wordmark with a small waveform accent."""
+    return '''<svg xmlns="http://www.w3.org/2000/svg" width="260" height="100" viewBox="0 0 260 100" role="img" aria-label="FLAC lossless audio">
+  <g fill="none" stroke="#FFFFFF" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M7 50h8l7-20 11 40 11-55 11 70 11-48 8 25 7-12h8"/>
+  </g>
+  <text x="98" y="70" fill="#FFFFFF" font-family="Arial Black,Arial,Helvetica,sans-serif" font-size="57" font-weight="900" letter-spacing="-3">FLAC</text>
+</svg>'''
+
+
+(TECHNICAL_DIR / "60-fps.svg").write_text(fps_badge(60), encoding="utf-8")
+(TECHNICAL_DIR / "120-fps.svg").write_text(fps_badge(120), encoding="utf-8")
+(TECHNICAL_DIR / "flac.svg").write_text(flac_badge(), encoding="utf-8")
 
 
 for index, item in enumerate(streaming_filters):
@@ -593,13 +623,64 @@ app.get("/badges.json", (req, res) => {
   const host = String(req.headers["x-forwarded-host"] || req.get("host") || "").split(",")[0].trim();
   const origin = `${proto}://${host}`;
   let streamIndex = 0;
+  const technicalAssets = {
+    FLAC: "flac.svg",
+  };
+  const assetUrl = (folder, asset) => `${origin}/badges/${folder}/${asset}?v=3.0.3`;
+  const baseFilters = badgeBase.filters.map((filter) => {
+    if (filter.groupId === "gs") {
+      const asset = `stream-${String(streamIndex++).padStart(3, "0")}.svg`;
+      return { ...filter, imageURL: assetUrl("streaming-fixed", asset) };
+    }
+    const technicalAsset = technicalAssets[filter.name];
+    if (technicalAsset) {
+      return { ...filter, imageURL: assetUrl("technical-fixed", technicalAsset) };
+    }
+    return filter;
+  });
+  const frameRateFilters = [
+    {
+      type: "filter",
+      id: "fps-120",
+      name: "120 FPS",
+      pattern: "(?i)(?<![0-9])(?:119\\.88|120(?:\\.0+)?)[ ._-]*(?:fps|hz)(?![A-Za-z0-9])",
+      tagColor: "#00000000",
+      borderColor: "#00000000",
+      textColor: "#FFFFFF",
+      tagStyle: "filled",
+      imageURL: assetUrl("technical-fixed", "120-fps.svg"),
+      isEnabled: true,
+      groupId: "gfr",
+    },
+    {
+      type: "filter",
+      id: "fps-60",
+      name: "60 FPS",
+      pattern: "(?i)(?<![0-9])(?:59\\.94|60(?:\\.0+)?)[ ._-]*(?:fps|hz)(?![A-Za-z0-9])",
+      tagColor: "#00000000",
+      borderColor: "#00000000",
+      textColor: "#FFFFFF",
+      tagStyle: "filled",
+      imageURL: assetUrl("technical-fixed", "60-fps.svg"),
+      isEnabled: true,
+      groupId: "gfr",
+    },
+  ];
+  const frameRateGroup = {
+    id: "gfr",
+    name: "Frame Rate",
+    color: "#A9E7FF",
+    borderColor: "#00000000",
+    isExpanded: true,
+  };
   const payload = {
     ...badgeBase,
-    filters: badgeBase.filters.map((filter) => {
-      if (filter.groupId !== "gs") return filter;
-      const asset = `stream-${String(streamIndex++).padStart(3, "0")}.svg`;
-      return { ...filter, imageURL: `${origin}/badges/streaming-fixed/${asset}?v=3.0.2` };
-    }),
+    groups: [
+      ...badgeBase.groups.slice(0, 2),
+      frameRateGroup,
+      ...badgeBase.groups.slice(2),
+    ],
+    filters: [...baseFilters, ...frameRateFilters],
   };
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Cache-Control", "public, s-maxage=300, stale-while-revalidate=86400");
