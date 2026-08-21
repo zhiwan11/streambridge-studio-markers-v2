@@ -155,12 +155,6 @@ SVG_LOGOS = {
 # their official vector silhouette, recolour it for the dark player UI, and
 # preserve a compact intrinsic aspect ratio so they align with 4K/HDR badges.
 TRANSPARENT_SVG_LOGOS = {
-    "Blu-ray Disc": (
-        "blu-ray-disc.svg",
-        "https://upload.wikimedia.org/wikipedia/commons/1/14/Blu-ray_Disc.svg",
-        210,
-        112,
-    ),
     "Ultra HD Blu-ray": (
         "ultra-hd-blu-ray.svg",
         "https://upload.wikimedia.org/wikipedia/commons/2/21/Ultra_HD_Blu-ray_%28logo%29.svg",
@@ -254,17 +248,42 @@ def transparent_image_badge(name: str, image_bytes: bytes, mime_type: str = "ima
 
 
 def netflix_badge() -> str:
+    """Netflix N with generous safe area so it aligns with technical marks."""
     return '''<svg xmlns="http://www.w3.org/2000/svg" width="72" height="100" viewBox="0 0 72 100" role="img" aria-label="Netflix">
-  <path fill="#FF1F2D" d="M5 0h18v100H5zM49 0h18v100H49zM21 0h19l27 100H48L21 35z"/>
+  <path fill="#E50914" d="M14 18h13v64H14zM45 18h13v64H45zM26 18h15l17 64H44L26 42z"/>
 </svg>'''
 
 
-def itunes_badge() -> str:
-    return '''<svg xmlns="http://www.w3.org/2000/svg" width="280" height="100" viewBox="0 0 280 100" role="img" aria-label="iTunes">
-  <defs><linearGradient id="itunes" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#FA2D7F"/><stop offset="1" stop-color="#5AC8FA"/></linearGradient></defs>
-  <circle cx="48" cy="50" r="43" fill="url(#itunes)"/>
-  <path fill="#FFFFFF" d="M59 22v41c0 10-8 17-18 17-9 0-16-5-16-13s7-14 17-14c3 0 6 1 8 2V31l25-5v12z"/>
-  <text x="101" y="68" fill="#FFFFFF" font-family="Arial,Helvetica,sans-serif" font-size="48" font-weight="800" letter-spacing="-2">iTunes</text>
+def itunes_badge(apple_tv_bytes: bytes) -> str:
+    """Classic Apple + iTunes lockup; intentionally avoids the Music note."""
+    encoded = base64.b64encode(apple_tv_bytes).decode("ascii")
+    return f'''<svg xmlns="http://www.w3.org/2000/svg" width="278" height="100" viewBox="0 0 278 100" role="img" aria-label="iTunes movies and TV">
+  <defs>
+    <clipPath id="apple-only"><rect x="0" y="0" width="88" height="100"/></clipPath>
+    <filter id="contrast" x="-15%" y="-15%" width="130%" height="130%">
+      <feMorphology in="SourceAlpha" operator="dilate" radius="1.4" result="edge"/>
+      <feFlood flood-color="#15171A" result="ink"/><feComposite in="ink" in2="edge" operator="in" result="outline"/>
+      <feMerge><feMergeNode in="outline"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <image x="0" y="0" width="203" height="100" preserveAspectRatio="xMinYMid meet" clip-path="url(#apple-only)" filter="url(#contrast)"
+    href="data:image/png;base64,{encoded}"/>
+  <text x="96" y="68" fill="#FFFFFF" stroke="#15171A" stroke-width="2.4" paint-order="stroke fill"
+    font-family="Arial,Helvetica,sans-serif" font-size="53" font-weight="800" letter-spacing="-2">iTunes</text>
+</svg>'''
+
+
+def bluray_badge() -> str:
+    """Large transparent Blu-ray technical mark for compact source rows."""
+    return '''<svg xmlns="http://www.w3.org/2000/svg" width="340" height="100" viewBox="0 0 340 100" role="img" aria-label="Blu-ray Disc">
+  <g fill="none" stroke="#27B9F2" stroke-linecap="round">
+    <path d="M7 70c8-33 29-52 59-52 18 0 34 8 44 21" stroke-width="8"/>
+    <path d="M16 72c18 9 45 9 70-2" stroke-width="6"/>
+  </g>
+  <circle cx="61" cy="48" r="9" fill="#27B9F2"/>
+  <text x="112" y="64" fill="#FFFFFF" stroke="#15171A" stroke-width="2" paint-order="stroke fill"
+    font-family="Arial Black,Arial,Helvetica,sans-serif" font-size="46" font-weight="900" letter-spacing="-3">BLU-RAY</text>
+  <text x="115" y="87" fill="#AEB5BD" font-family="Arial,Helvetica,sans-serif" font-size="17" font-weight="800" letter-spacing="5">DISC</text>
 </svg>'''
 
 
@@ -306,12 +325,12 @@ def flac_badge() -> str:
 
 
 def hq_badge() -> str:
-    return '''<svg xmlns="http://www.w3.org/2000/svg" width="278" height="100" viewBox="0 0 278 100" role="img" aria-label="HQ high bitrate">
+    return '''<svg xmlns="http://www.w3.org/2000/svg" width="286" height="100" viewBox="0 0 286 100" role="img" aria-label="HQ high quality">
   <path d="M6 18h28M6 18v19M6 82h28M6 82V63" fill="none" stroke="#F5C451" stroke-width="6" stroke-linecap="round"/>
   <text x="25" y="74" fill="#F5C451" font-family="Arial Black,Arial,Helvetica,sans-serif" font-size="76" font-weight="900" letter-spacing="-6">HQ</text>
   <path d="M139 22v56" stroke="#F5C451" stroke-width="3" stroke-linecap="round"/>
-  <text x="155" y="45" fill="#FFFFFF" font-family="Arial,Helvetica,sans-serif" font-size="22" font-weight="900" letter-spacing="2">HIGH</text>
-  <text x="155" y="73" fill="#FFFFFF" font-family="Arial,Helvetica,sans-serif" font-size="22" font-weight="900" letter-spacing="1">BITRATE</text>
+  <text x="155" y="45" fill="#FFFFFF" stroke="#15171A" stroke-width="1.5" paint-order="stroke fill" font-family="Arial,Helvetica,sans-serif" font-size="22" font-weight="900" letter-spacing="2">HIGH</text>
+  <text x="155" y="73" fill="#FFFFFF" stroke="#15171A" stroke-width="1.5" paint-order="stroke fill" font-family="Arial,Helvetica,sans-serif" font-size="22" font-weight="900" letter-spacing="1">QUALITY</text>
 </svg>'''
 
 
@@ -336,7 +355,12 @@ for index, item in enumerate(streaming_filters):
     if name == "Netflix":
         badge = netflix_badge()
     elif name == "iTunes":
-        badge = itunes_badge()
+        apple_cache = LOGO_CACHE / "apple-tv-plus.png"
+        if not apple_cache.exists():
+            apple_cache.write_bytes(fetch_bytes(LOGO_ROOT + "apple-tv-plus.png"))
+        badge = itunes_badge(apple_cache.read_bytes())
+    elif name == "Blu-ray Disc":
+        badge = bluray_badge()
     transparent_logo = TRANSPARENT_SVG_LOGOS.get(name)
     if transparent_logo:
         logo_file, logo_url, width, height = transparent_logo
@@ -670,7 +694,7 @@ app.get("/badges.json", (req, res) => {
   const technicalAssets = {
     FLAC: "flac.svg",
   };
-  const assetUrl = (folder, asset) => `${origin}/badges/${folder}/${asset}?v=3.0.4`;
+  const assetUrl = (folder, asset) => `${origin}/badges/${folder}/${asset}?v=3.0.5`;
   const baseFilters = badgeBase.filters.map((filter) => {
     if (filter.groupId === "gs") {
       const asset = `stream-${String(streamIndex++).padStart(3, "0")}.svg`;
@@ -702,7 +726,7 @@ app.get("/badges.json", (req, res) => {
     {
       type: "filter",
       id: "quality-hq",
-      name: "HQ High Bitrate",
+      name: "HQ High Quality",
       pattern: "(?i)(?<![A-Za-z0-9])hq(?![A-Za-z0-9])",
       tagColor: "#00000000",
       borderColor: "#00000000",

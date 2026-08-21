@@ -35,24 +35,28 @@ assert "data:image/png;base64," in svg("Apple TV+")
 assert "data:image/png;base64," in svg("Amazon Prime Video")
 assert "data:image/png;base64," in svg("Crunchyroll")
 assert 'aria-label="Netflix"' in svg("Netflix")
-assert "#FF1F2D" in svg("Netflix")
-assert 'aria-label="iTunes"' in svg("iTunes")
+assert "#E50914" in svg("Netflix")
+assert 'd="M14 18' in svg("Netflix")
+assert 'aria-label="iTunes movies and TV"' in svg("iTunes")
 assert "iTunes" in svg("iTunes")
+assert "data:image/png;base64," in svg("iTunes")
+assert "linearGradient" not in svg("iTunes")
 assert "data:image/svg+xml;base64," in svg("哔哩哔哩")
 assert "<text" not in svg("哔哩哔哩")
-for disc_name in ("Blu-ray Disc", "Ultra HD Blu-ray"):
-    disc_svg = svg(disc_name)
-    assert "data:image/svg+xml;base64," in disc_svg
-    assert "<rect" not in disc_svg
-    assert "<text" not in disc_svg
-    encoded = disc_svg.split("base64,", 1)[1].split('"', 1)[0]
-    embedded = __import__("base64").b64decode(encoded).decode("utf-8")
-    assert 'fill="#FFFFFF"' in embedded
-    assert "#0095D5" not in embedded
-    assert "#0096D6" not in embedded
+bluray_svg = svg("Blu-ray Disc")
+assert 'width="340"' in bluray_svg
+assert 'height="100"' in bluray_svg
+assert "BLU-RAY" in bluray_svg
+assert "#27B9F2" in bluray_svg
+assert "data:image" not in bluray_svg
 
-assert 'width="210"' in svg("Blu-ray Disc")
-assert 'height="112"' in svg("Blu-ray Disc")
+ultra_bluray_svg = svg("Ultra HD Blu-ray")
+assert "data:image/svg+xml;base64," in ultra_bluray_svg
+encoded = ultra_bluray_svg.split("base64,", 1)[1].split('"', 1)[0]
+embedded = __import__("base64").b64decode(encoded).decode("utf-8")
+assert 'fill="#FFFFFF"' in embedded
+assert "#0095D5" not in embedded
+assert "#0096D6" not in embedded
 assert 'width="290"' in svg("Ultra HD Blu-ray")
 assert 'height="100"' in svg("Ultra HD Blu-ray")
 
@@ -66,7 +70,7 @@ for technical_asset in ("60-fps.svg", "120-fps.svg", "flac.svg", "hq.svg", "hdr-
 assert 'aria-label="60 FPS"' in (technical_dir / "60-fps.svg").read_text(encoding="utf-8")
 assert 'aria-label="120 FPS"' in (technical_dir / "120-fps.svg").read_text(encoding="utf-8")
 assert "FLAC" in (technical_dir / "flac.svg").read_text(encoding="utf-8")
-assert "HQ" in (technical_dir / "hq.svg").read_text(encoding="utf-8")
+assert "QUALITY" in (technical_dir / "hq.svg").read_text(encoding="utf-8")
 assert "VIVID" in (technical_dir / "hdr-vivid.svg").read_text(encoding="utf-8")
 
 print("badges_test.py: 144 provider/disc + 5 technical badges passed")
