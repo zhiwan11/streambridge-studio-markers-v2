@@ -64,7 +64,7 @@ def replace_once(path: Path, old: str, new: str, label: str) -> None:
     path.write_text(text.replace(old, new, 1), encoding="utf-8")
 
 
-if not BASE_JSON.exists() and BASE_JSON_GZ_B64.exists():
+if BASE_JSON_GZ_B64.exists():
     compressed = base64.b64decode(BASE_JSON_GZ_B64.read_text(encoding="ascii"))
     BASE_JSON.write_bytes(gzip.decompress(compressed))
 
@@ -79,8 +79,59 @@ base = json.loads(BASE_JSON.read_text(encoding="utf-8"))
 if len(base.get("filters", [])) != 245:
     raise RuntimeError("Unexpected base filter count")
 
+
+def hidden_marker(value: str) -> str:
+    bits = "".join(f"{byte:08b}" for byte in value.encode("utf-8"))
+    payload = "".join("\u200b" if bit == "0" else "\u200c" for bit in bits)
+    return f"\u2063{payload}\u2064"
+
+
+ani_one_marker = hidden_marker("Ani-One")
+line_tv_marker = hidden_marker("LINE TV")
+base["filters"].extend(
+    [
+        {
+            "type": "filter",
+            "id": "stream-145",
+            "name": "Ani-One",
+            "pattern": (
+                r"(?:(?:^|[^A-Za-z0-9])(?:ANi|ANI|(?:Ani|ANi|ANI)[\s._-]*One"
+                r"(?:[\s._-]*Asia)?|ANIONE(?:ASIA)?)(?=$|[^A-Za-z0-9])|"
+                + ani_one_marker
+                + ")"
+            ),
+            "caseSensitive": True,
+            "tagColor": "#00000000",
+            "borderColor": "#00000000",
+            "textColor": "#FFFFFF",
+            "tagStyle": "filled",
+            "imageURL": "",
+            "isEnabled": True,
+            "groupId": "gs",
+        },
+        {
+            "type": "filter",
+            "id": "stream-146",
+            "name": "LINE TV",
+            "pattern": (
+                r"(?i)(?:(?:^|[^A-Za-z0-9])LINE[\s._-]*TV(?=$|[^A-Za-z0-9])|"
+                + line_tv_marker
+                + ")"
+            ),
+            "tagColor": "#00000000",
+            "borderColor": "#00000000",
+            "textColor": "#FFFFFF",
+            "tagStyle": "filled",
+            "imageURL": "",
+            "isEnabled": True,
+            "groupId": "gs",
+        },
+    ]
+)
+BASE_JSON.write_text(json.dumps(base, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
+
 streaming_filters = [f for f in base["filters"] if f.get("groupId") == "gs"]
-if len(streaming_filters) != 144:
+if len(streaming_filters) != 146:
     raise RuntimeError("Unexpected streaming filter count")
 
 marker_re = re.compile(r"\u2063[\u200b\u200c]+\u2064")
@@ -93,6 +144,7 @@ for item in streaming_filters:
             "name": item.get("name", ""),
             "pattern": pattern,
             "marker": marker_match.group(0) if marker_match else "",
+            "caseSensitive": bool(item.get("caseSensitive")),
         }
     )
 RULES_JSON.write_text(
@@ -185,6 +237,8 @@ BRAND_STYLES = {
     "XIGUA VIDEO": ("XIGUA", "#FF5B50", "#FFF1EF", "#FFE1DE"),
     "DOUYIN": ("DOUYIN", "#25F4EE", "#F6F6F6", "#E8E8E8"),
     "M1905": ("M1905", "#D8B45C", "#FFF9ED", "#F7EBCF"),
+    "Ani-One": ("Ani-One", "#D5D9DE", "#F5F6F7", "#E8EAED"),
+    "LINE TV": ("LINE TV", "#06C755", "#ECFFF1", "#D8FFE2"),
     "Crunchyroll": ("Crunchyroll", "#F47521", "#FFF4EA", "#FFE5D0"),
     "Apple TV+": ("tv+", "#FFFFFF", "#101010", "#292929"),
     "Apple TV": ("tv", "#FFFFFF", "#101010", "#292929"),
@@ -263,6 +317,32 @@ def itunes_badge() -> str:
 </svg>'''
 
 
+def ani_one_badge() -> str:
+    """Ani-One's silver italic wordmark and distinctive red i-dot, without a plate."""
+    return '''<svg xmlns="http://www.w3.org/2000/svg" width="278" height="100" viewBox="0 0 278 100" role="img" aria-label="Ani-One">
+  <defs>
+    <linearGradient id="silver" x1="0" y1="0" x2="0" y2="1">
+      <stop stop-color="#FFFFFF"/><stop offset=".48" stop-color="#D6DBE0"/><stop offset="1" stop-color="#8E959D"/>
+    </linearGradient>
+    <radialGradient id="redDot" cx="35%" cy="25%" r="70%">
+      <stop stop-color="#FF6673"/><stop offset=".55" stop-color="#E31937"/><stop offset="1" stop-color="#981126"/>
+    </radialGradient>
+  </defs>
+  <text x="4" y="76" fill="url(#silver)" stroke="#20242A" stroke-width="2" paint-order="stroke fill"
+    font-family="Arial Black,Arial,Helvetica,sans-serif" font-size="70" font-style="italic" font-weight="900" letter-spacing="-6">Anı-One</text>
+  <circle cx="82" cy="17" r="10" fill="url(#redDot)" stroke="#20242A" stroke-width="1.5"/>
+</svg>'''
+
+
+def line_tv_badge() -> str:
+    """Official LINE TV green play symbol with a dark-UI-safe transparent wordmark."""
+    return '''<svg xmlns="http://www.w3.org/2000/svg" width="280" height="100" viewBox="0 0 280 100" role="img" aria-label="LINE TV">
+  <path transform="translate(8 14) scale(2.9)" fill="#06C755" d="M19.81 12a.94.94 0 0 0-.45-.8L1.46.15A1 1 0 0 0 1 0 1 1 0 0 0 0 .93v22.22a1 1 0 0 0 1 .93.9.9 0 0 0 .51-.15l17.9-11.09a.94.94 0 0 0 .4-.84ZM4.8 16.17V7.87L11.53 12 4.8 16.21Z"/>
+  <text x="80" y="70" fill="#FFFFFF" stroke="#15171A" stroke-width="2" paint-order="stroke fill"
+    font-family="Arial Black,Arial,Helvetica,sans-serif" font-size="56" font-weight="900" letter-spacing="-3">LINE TV</text>
+</svg>'''
+
+
 def transparent_white_logo(name: str, image_bytes: bytes, width: int, height: int) -> str:
     source = image_bytes.decode("utf-8")
     source = re.sub(r'fill="#[0-9A-Fa-f]{6}"', 'fill="#FFFFFF"', source)
@@ -328,6 +408,10 @@ for index, item in enumerate(streaming_filters):
         badge = netflix_badge()
     elif name == "iTunes":
         badge = itunes_badge()
+    elif name == "Ani-One":
+        badge = ani_one_badge()
+    elif name == "LINE TV":
+        badge = line_tv_badge()
     elif name == "Blu-ray Disc":
         bluray_cache = LOGO_CACHE / "bluray-blue.png"
         if not bluray_cache.exists():
@@ -411,6 +495,14 @@ const studioProviderAliases = {
   "XIGUA VIDEO": ["西瓜视频", "西瓜視頻", "Xigua Video"],
   "DOUYIN": ["抖音", "Douyin", "抖音影视"],
   "M1905": ["1905电影网", "1905.com", "M1905"],
+  "Ani-One": [
+    "Ani-One", "Ani-One Asia", "Ani One Asia", "AniOne Asia",
+    "Medialink", "Medialink Group", "羚邦", "羚邦集团", "羚邦集團",
+    "羚邦动画", "羚邦動畫",
+  ],
+  "LINE TV": [
+    "LINE TV", "LINETV", "LINE TV Taiwan", "LINE TV Thailand", "LINE TV Original",
+  ],
 
   "Netflix": [
     "Netflix", "Netflix Studios", "Netflix Animation", "Netflix International",
@@ -469,7 +561,7 @@ const compiledRules = rules
   .map((rule) => {
     try {
       const source = String(rule.pattern || "").replace(/^\(\?i\)/, "");
-      return [rule, new RegExp(source, "i")];
+      return [rule, new RegExp(source, rule.caseSensitive ? "" : "i")];
     } catch (_error) {
       return [rule, null];
     }
@@ -666,7 +758,7 @@ app.get("/badges.json", (req, res) => {
   const technicalAssets = {
     FLAC: "flac.svg",
   };
-  const assetUrl = (folder, asset) => `${origin}/badges/${folder}/${asset}?v=3.0.6`;
+  const assetUrl = (folder, asset) => `${origin}/badges/${folder}/${asset}?v=3.0.7`;
   const baseFilters = badgeBase.filters.map((filter) => {
     if (filter.groupId === "gs") {
       const asset = `stream-${String(streamIndex++).padStart(3, "0")}.svg`;

@@ -92,4 +92,20 @@ const alreadyMarked = resolve(
 assert.equal(alreadyMarked.provider, "Apple TV+");
 assert.equal(alreadyMarked.badgeFilename, appleSeries.badgeFilename);
 
-console.log("providerResolver.test.js: 11 cases passed");
+const aniFilename = resolve("ANi");
+assert.equal(aniFilename.provider, "Ani-One");
+assert.equal(aniFilename.source, "filename");
+
+const aniFalsePositive = resolve("Anime.Animation.1080p.WEB-DL");
+assert.equal(aniFalsePositive.provider, null);
+
+const lineTvFilename = resolve("Flaming.Dodgeball.Girl-DL.AVC.AAC-LINETV@UBWEB");
+assert.equal(lineTvFilename.provider, "LINE TV");
+assert.equal(lineTvFilename.source, "filename");
+
+const aniStudio = resolve("1080p.WEB-DL.AVC.AAC", [{ Name: "Medialink" }]);
+assert.equal(aniStudio.provider, "Ani-One");
+assert.equal(aniStudio.source, "item-studio");
+assert.notEqual(aniStudio.badgeFilename, aniStudio.rawFilename);
+
+console.log("providerResolver.test.js: 15 cases passed");

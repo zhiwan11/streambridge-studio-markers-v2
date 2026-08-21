@@ -9,10 +9,10 @@ streaming = [item for item in base["filters"] if item.get("groupId") == "gs"]
 assets = sorted((ROOT / "public" / "badges" / "streaming-fixed").glob("stream-*.svg"))
 technical_dir = ROOT / "public" / "badges" / "technical-fixed"
 
-assert len(base["filters"]) == 245
+assert len(base["filters"]) == 247
 assert len(base["groups"]) == 15
-assert len(streaming) == 144
-assert len(assets) == 144
+assert len(streaming) == 146
+assert len(assets) == 146
 
 for asset in assets:
     text = asset.read_text(encoding="utf-8")
@@ -45,6 +45,16 @@ assert "apple-only" not in svg("iTunes")
 assert "linearGradient" not in svg("iTunes")
 assert "data:image/svg+xml;base64," in svg("哔哩哔哩")
 assert "<text" not in svg("哔哩哔哩")
+ani_one_svg = svg("Ani-One")
+assert 'aria-label="Ani-One"' in ani_one_svg
+assert "Anı-One" in ani_one_svg
+assert "#E31937" in ani_one_svg
+assert 'id="silver"' in ani_one_svg
+line_tv_svg = svg("LINE TV")
+assert 'aria-label="LINE TV"' in line_tv_svg
+assert ">LINE TV</text>" in line_tv_svg
+assert "#06C755" in line_tv_svg
+assert "data:image" not in line_tv_svg
 bluray_svg = svg("Blu-ray Disc")
 assert 'width="300"' in bluray_svg
 assert 'height="100"' in bluray_svg
@@ -79,4 +89,4 @@ assert "HIGH" not in hq_svg
 assert "<path" not in hq_svg
 assert "VIVID" in (technical_dir / "hdr-vivid.svg").read_text(encoding="utf-8")
 
-print("badges_test.py: 144 provider/disc + 5 technical badges passed")
+print("badges_test.py: 146 provider/disc + 5 technical badges passed")
