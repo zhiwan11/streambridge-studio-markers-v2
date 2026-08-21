@@ -19,6 +19,8 @@ for asset in assets:
     assert text.startswith("<svg")
     assert 'href="http' not in text
     assert "/badges-v2/" not in text
+    assert 'id="bg"' not in text
+    assert 'width="318" height="110"' not in text
 
 by_name = {item["name"]: index for index, item in enumerate(streaming)}
 
@@ -27,13 +29,15 @@ def svg(name: str) -> str:
     return (ROOT / "public" / "badges" / "streaming-fixed" / f"stream-{index:03d}.svg").read_text(encoding="utf-8")
 
 
-assert "#00BE06" in svg("爱奇艺")
 assert "data:image/svg+xml;base64," in svg("爱奇艺")
 assert "<text" not in svg("爱奇艺")
-assert "#101010" in svg("Apple TV+")
-assert "#102A43" in svg("Amazon Prime Video")
-assert "#F47521" in svg("Crunchyroll")
-assert "#00A1D6" in svg("哔哩哔哩")
+assert "data:image/png;base64," in svg("Apple TV+")
+assert "data:image/png;base64," in svg("Amazon Prime Video")
+assert "data:image/png;base64," in svg("Crunchyroll")
+assert 'aria-label="Netflix"' in svg("Netflix")
+assert "#FF1F2D" in svg("Netflix")
+assert 'aria-label="iTunes"' in svg("iTunes")
+assert "iTunes" in svg("iTunes")
 assert "data:image/svg+xml;base64," in svg("哔哩哔哩")
 assert "<text" not in svg("哔哩哔哩")
 for disc_name in ("Blu-ray Disc", "Ultra HD Blu-ray"):
@@ -52,16 +56,17 @@ assert 'height="112"' in svg("Blu-ray Disc")
 assert 'width="290"' in svg("Ultra HD Blu-ray")
 assert 'height="100"' in svg("Ultra HD Blu-ray")
 
-for technical_asset in ("60-fps.svg", "120-fps.svg", "flac.svg"):
+for technical_asset in ("60-fps.svg", "120-fps.svg", "flac.svg", "hq.svg", "hdr-vivid.svg"):
     technical_svg = (technical_dir / technical_asset).read_text(encoding="utf-8")
     assert technical_svg.startswith("<svg")
     assert "#FFFFFF" in technical_svg
     assert 'href="http://' not in technical_svg
     assert 'href="https://' not in technical_svg
-    assert "linearGradient" not in technical_svg
 
 assert 'aria-label="60 FPS"' in (technical_dir / "60-fps.svg").read_text(encoding="utf-8")
 assert 'aria-label="120 FPS"' in (technical_dir / "120-fps.svg").read_text(encoding="utf-8")
 assert "FLAC" in (technical_dir / "flac.svg").read_text(encoding="utf-8")
+assert "HQ" in (technical_dir / "hq.svg").read_text(encoding="utf-8")
+assert "VIVID" in (technical_dir / "hdr-vivid.svg").read_text(encoding="utf-8")
 
-print("badges_test.py: 144 provider/disc + 3 technical badges passed")
+print("badges_test.py: 144 provider/disc + 5 technical badges passed")

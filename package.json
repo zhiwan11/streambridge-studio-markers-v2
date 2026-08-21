@@ -1,6 +1,6 @@
 {
   "name": "streambridge-studio-markers-v2",
-  "version": "3.0.3",
+  "version": "3.0.4",
   "private": true,
   "main": "index.js",
   "engines": {
@@ -9,7 +9,7 @@
   "scripts": {
     "build": "python3 scripts/build_v2.py",
     "start": "node index.js",
-    "test": "npm run build && node tests/providerResolver.test.js && python3 tests/badges_test.py"
+    "test": "npm run build && node tests/providerResolver.test.js && node tests/configRules.test.js && python3 tests/badges_test.py"
   },
   "dependencies": {
     "axios": "^1.9.0",

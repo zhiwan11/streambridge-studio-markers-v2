@@ -170,87 +170,102 @@ TRANSPARENT_SVG_LOGOS = {
 }
 
 
-# All other services receive a high-contrast brand card instead of the old
-# unreadable generic white card.
+# Brand colours are used directly on transparent wordmarks. There is no card,
+# plate, rounded rectangle, or generic grey/white background around providers.
 BRAND_STYLES = {
     "爱奇艺": ("iQIYI", "#00BE06", "#E9FFE9", "#D5F9DA"),
     "腾讯视频": ("Tencent Video", "#00A8E8", "#EAFBFF", "#D8F4FF"),
     "WeTV": ("WeTV", "#00C878", "#EBFFF6", "#D7F8E9"),
     "优酷": ("YOUKU", "#FF5C35", "#FFF4F0", "#EAF8FF"),
-    "芒果TV": ("芒果TV", "#FF6A00", "#FFF5E9", "#FFE8C8"),
+    "芒果TV": ("Mango TV", "#FF7A1A", "#FFF5E9", "#FFE8C8"),
     "哔哩哔哩": ("bilibili", "#00A1D6", "#ECFAFF", "#DDF5FF"),
     "Bstation": ("Bstation", "#00A1D6", "#ECFAFF", "#DDF5FF"),
     "AcFun": ("AcFun", "#FD4C5D", "#FFF0F2", "#FFE0E4"),
-    "华数TV": ("华数TV", "#E60012", "#FFF1F2", "#FFE1E4"),
-    "百视TV": ("百视TV", "#7656FF", "#F4F0FF", "#E8E0FF"),
-    "埋堆堆": ("埋堆堆", "#FF4057", "#FFF0F3", "#FFE0E6"),
-    "SOHU VIDEO": ("搜狐视频", "#E7252C", "#FFF0F0", "#FFE0E1"),
-    "MIGU VIDEO": ("咪咕视频", "#E6007E", "#FFF0F8", "#FFE0F1"),
-    "PPTV": ("PP视频", "#2878FF", "#EEF5FF", "#DDEBFF"),
-    "XIGUA VIDEO": ("西瓜视频", "#FF4A3D", "#FFF1EF", "#FFE1DE"),
-    "DOUYIN": ("抖音", "#111111", "#F6F6F6", "#E8E8E8"),
-    "M1905": ("1905电影网", "#B79245", "#FFF9ED", "#F7EBCF"),
+    "华数TV": ("Wasu TV", "#FF3344", "#FFF1F2", "#FFE1E4"),
+    "百视TV": ("BesTV", "#8D74FF", "#F4F0FF", "#E8E0FF"),
+    "埋堆堆": ("Maiduidui", "#FF5268", "#FFF0F3", "#FFE0E6"),
+    "SOHU VIDEO": ("SOHU", "#FF453A", "#FFF0F0", "#FFE0E1"),
+    "MIGU VIDEO": ("MIGU", "#FF4DA3", "#FFF0F8", "#FFE0F1"),
+    "PPTV": ("PP VIDEO", "#3D8BFF", "#EEF5FF", "#DDEBFF"),
+    "XIGUA VIDEO": ("XIGUA", "#FF5B50", "#FFF1EF", "#FFE1DE"),
+    "DOUYIN": ("DOUYIN", "#25F4EE", "#F6F6F6", "#E8E8E8"),
+    "M1905": ("M1905", "#D8B45C", "#FFF9ED", "#F7EBCF"),
     "Crunchyroll": ("Crunchyroll", "#F47521", "#FFF4EA", "#FFE5D0"),
     "Apple TV+": ("tv+", "#FFFFFF", "#101010", "#292929"),
     "Apple TV": ("tv", "#FFFFFF", "#101010", "#292929"),
-    "iTunes": ("tv", "#FFFFFF", "#101010", "#292929"),
-    "Netflix": ("NETFLIX", "#E50914", "#FFF2F2", "#FFE3E4"),
+    "iTunes": ("iTunes", "#FFFFFF", "#101010", "#292929"),
+    "Netflix": ("N", "#E50914", "#FFF2F2", "#FFE3E4"),
     "Amazon Prime Video": ("prime video", "#FFFFFF", "#102A43", "#184D70"),
-    "HBO Max": ("HBO max", "#5B2DFF", "#F3EFFF", "#E6DFFF"),
-    "Disney+": ("Disney+", "#113CCF", "#F1F4FF", "#DFE7FF"),
+    "HBO Max": ("HBO max", "#9D7CFF", "#F3EFFF", "#E6DFFF"),
+    "Disney+": ("Disney+", "#4EA7FF", "#F1F4FF", "#DFE7FF"),
     "Hulu": ("hulu", "#1CE783", "#0B2419", "#123A28"),
-    "Paramount+": ("Paramount+", "#0064FF", "#EEF5FF", "#DCEAFF"),
-    "Peacock": ("peacock", "#111111", "#FFFDE8", "#FFF6C5"),
+    "Paramount+": ("Paramount+", "#4D95FF", "#EEF5FF", "#DCEAFF"),
+    "Peacock": ("peacock", "#FFFFFF", "#FFFDE8", "#FFF6C5"),
+    "Paramount+ with Showtime": ("P+ SHOWTIME", "#4D95FF", "#EEF5FF", "#DCEAFF"),
+    "YouTube Premium": ("YT Premium", "#FF3344", "#FFF2F2", "#FFE3E4"),
+    "Google Play Movies & TV": ("Google Play", "#FFFFFF", "#F7FAFB", "#E7EEF1"),
+    "The Roku Channel": ("Roku Channel", "#B28CFF", "#F7FAFB", "#E7EEF1"),
+    "Criterion Channel": ("Criterion", "#FFFFFF", "#F7FAFB", "#E7EEF1"),
+    "ARD Mediathek": ("ARD", "#68B9FF", "#F7FAFB", "#E7EEF1"),
+    "Mediaset Infinity": ("Mediaset", "#FFFFFF", "#F7FAFB", "#E7EEF1"),
+    "Movistar Plus+": ("Movistar+", "#4CC9FF", "#F7FAFB", "#E7EEF1"),
+    "SBS On Demand": ("SBS", "#FF8A3D", "#F7FAFB", "#E7EEF1"),
+    "WOWOW On Demand": ("WOWOW", "#5AA8FF", "#F7FAFB", "#E7EEF1"),
+    "Now TV Hong Kong": ("Now TV", "#FF5AA5", "#F7FAFB", "#E7EEF1"),
+    "STARZPLAY MENA": ("STARZPLAY", "#FFFFFF", "#F7FAFB", "#E7EEF1"),
 }
 
 
 def style_for(name: str) -> tuple[str, str, str, str]:
     return BRAND_STYLES.get(
         name,
-        (name or "Streaming", "#16212A", "#F7FAFB", "#E7EEF1"),
+        (name or "Streaming", "#FFFFFF", "#F7FAFB", "#E7EEF1"),
     )
 
 
 def font_size(label: str) -> int:
-    width_units = sum(1.65 if ord(char) > 127 else 1 for char in label)
-    if width_units <= 12:
-        return 39
-    if width_units <= 18:
-        return 32
-    if width_units <= 25:
-        return 26
-    return 21
+    width_units = sum(1.0 if ord(char) > 127 else 0.62 for char in label)
+    return max(16, min(72, int(280 / max(width_units, 1))))
 
 
-def card_shell(name: str, content: str) -> str:
-    _, accent, bg_start, bg_end = style_for(name)
-    return f'''<svg xmlns="http://www.w3.org/2000/svg" width="320" height="112" viewBox="0 0 320 112" role="img" aria-label="{html.escape(name)}">
-  <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="{bg_start}"/>
-      <stop offset="1" stop-color="{bg_end}"/>
-    </linearGradient>
-  </defs>
-  <rect x="1" y="1" width="318" height="110" rx="27" fill="url(#bg)" stroke="{accent}" stroke-opacity=".22" stroke-width="2"/>
-  {content}
-</svg>'''
-
-
-def wordmark_card(name: str) -> str:
+def transparent_wordmark(name: str) -> str:
     label, accent, _, _ = style_for(name)
     safe = html.escape(label)
     size = font_size(label)
-    content = f'''<text x="160" y="58" dominant-baseline="middle" text-anchor="middle"
-    font-family="Arial,Helvetica,'Noto Sans SC',sans-serif"
-    font-size="{size}" font-weight="800" letter-spacing="-.5" fill="{accent}">{safe}</text>'''
-    return card_shell(name, content)
+    width = 300
+    return f'''<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="100" viewBox="0 0 {width} 100" role="img" aria-label="{html.escape(name)}">
+  <text x="150" y="52" dominant-baseline="middle" text-anchor="middle"
+    font-family="Arial,Helvetica,'Noto Sans SC',system-ui,sans-serif"
+    font-size="{size}" font-weight="900" letter-spacing="-.5" fill="{accent}">{safe}</text>
+</svg>'''
 
 
-def image_card(name: str, image_bytes: bytes, mime_type: str = "image/png") -> str:
+def transparent_image_badge(name: str, image_bytes: bytes, mime_type: str = "image/png") -> str:
+    if mime_type == "image/svg+xml":
+        source = image_bytes.decode("utf-8")
+        source = re.sub(r"#000000|#000(?![0-9A-Fa-f])", "#FFFFFF", source, flags=re.IGNORECASE)
+        source = re.sub(r"(?<=[:=\"'])black(?=[;\"'])", "#FFFFFF", source, flags=re.IGNORECASE)
+        image_bytes = source.encode("utf-8")
     encoded = base64.b64encode(image_bytes).decode("ascii")
-    content = f'''<image x="30" y="20" width="260" height="72" preserveAspectRatio="xMidYMid meet"
-    href="data:{mime_type};base64,{encoded}"/>'''
-    return card_shell(name, content)
+    return f'''<svg xmlns="http://www.w3.org/2000/svg" width="300" height="100" viewBox="0 0 300 100" role="img" aria-label="{html.escape(name)}">
+  <image x="0" y="0" width="300" height="100" preserveAspectRatio="xMidYMid meet"
+    href="data:{mime_type};base64,{encoded}"/>
+</svg>'''
+
+
+def netflix_badge() -> str:
+    return '''<svg xmlns="http://www.w3.org/2000/svg" width="72" height="100" viewBox="0 0 72 100" role="img" aria-label="Netflix">
+  <path fill="#FF1F2D" d="M5 0h18v100H5zM49 0h18v100H49zM21 0h19l27 100H48L21 35z"/>
+</svg>'''
+
+
+def itunes_badge() -> str:
+    return '''<svg xmlns="http://www.w3.org/2000/svg" width="280" height="100" viewBox="0 0 280 100" role="img" aria-label="iTunes">
+  <defs><linearGradient id="itunes" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#FA2D7F"/><stop offset="1" stop-color="#5AC8FA"/></linearGradient></defs>
+  <circle cx="48" cy="50" r="43" fill="url(#itunes)"/>
+  <path fill="#FFFFFF" d="M59 22v41c0 10-8 17-18 17-9 0-16-5-16-13s7-14 17-14c3 0 6 1 8 2V31l25-5v12z"/>
+  <text x="101" y="68" fill="#FFFFFF" font-family="Arial,Helvetica,sans-serif" font-size="48" font-weight="800" letter-spacing="-2">iTunes</text>
+</svg>'''
 
 
 def transparent_white_logo(name: str, image_bytes: bytes, width: int, height: int) -> str:
@@ -264,36 +279,64 @@ def transparent_white_logo(name: str, image_bytes: bytes, width: int, height: in
 
 
 def fps_badge(rate: int) -> str:
-    """Compact transparent high-frame-rate mark for the dark player UI."""
-    width = 232 if rate == 120 else 190
-    number_width = 162 if rate == 120 else 116
+    """Compact HFR lockup: the rate stays dominant at small player sizes."""
+    width = 282 if rate == 120 else 220
+    divider_x = 187 if rate == 120 else 125
+    label_x = divider_x + 18
     return f'''<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="100" viewBox="0 0 {width} 100" role="img" aria-label="{rate} FPS">
-  <g fill="#FFFFFF">
-    <text x="0" y="69" font-family="Arial Black,Arial,Helvetica,sans-serif" font-size="70" font-weight="900" letter-spacing="-5">{rate}</text>
-    <text x="{number_width}" y="47" font-family="Arial,Helvetica,sans-serif" font-size="27" font-weight="900" letter-spacing="-1">FPS</text>
-    <rect x="{number_width}" y="55" width="{width - number_width}" height="6" rx="3"/>
-  </g>
+  <path d="M6 16h29M6 16v20M6 84h29M6 84V64" fill="none" stroke="#45D9FF" stroke-width="6" stroke-linecap="round"/>
+  <text x="25" y="78" fill="#FFFFFF" font-family="Arial Black,Arial,Helvetica,sans-serif" font-size="78" font-weight="900" letter-spacing="-5">{rate}</text>
+  <path d="M{divider_x} 20v60" stroke="#45D9FF" stroke-width="3" stroke-linecap="round"/>
+  <text x="{label_x}" y="45" fill="#45D9FF" font-family="Arial,Helvetica,sans-serif" font-size="26" font-weight="900" letter-spacing="2">HFR</text>
+  <text x="{label_x}" y="75" fill="#FFFFFF" font-family="Arial,Helvetica,sans-serif" font-size="25" font-weight="800" letter-spacing="2">FPS</text>
 </svg>'''
 
 
 def flac_badge() -> str:
-    """Transparent lossless-audio wordmark with a small waveform accent."""
-    return '''<svg xmlns="http://www.w3.org/2000/svg" width="260" height="100" viewBox="0 0 260 100" role="img" aria-label="FLAC lossless audio">
-  <g fill="none" stroke="#FFFFFF" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M7 50h8l7-20 11 40 11-55 11 70 11-48 8 25 7-12h8"/>
+    """Transparent lossless wordmark using the familiar equalizer language."""
+    return '''<svg xmlns="http://www.w3.org/2000/svg" width="278" height="100" viewBox="0 0 278 100" role="img" aria-label="FLAC lossless audio">
+  <g fill="#45D9FF">
+    <rect x="4" y="38" width="8" height="25" rx="4"/><rect x="18" y="23" width="8" height="55" rx="4"/>
+    <rect x="32" y="10" width="8" height="80" rx="4"/><rect x="46" y="28" width="8" height="44" rx="4"/>
+    <rect x="60" y="40" width="8" height="21" rx="4"/>
   </g>
-  <text x="98" y="70" fill="#FFFFFF" font-family="Arial Black,Arial,Helvetica,sans-serif" font-size="57" font-weight="900" letter-spacing="-3">FLAC</text>
+  <text x="82" y="67" fill="#FFFFFF" font-family="Arial,Helvetica,sans-serif" font-size="64" font-weight="900" letter-spacing="-4">flac</text>
+  <text x="85" y="88" fill="#AEB5BD" font-family="Arial,Helvetica,sans-serif" font-size="16" font-weight="800" letter-spacing="4">LOSSLESS</text>
+</svg>'''
+
+
+def hq_badge() -> str:
+    return '''<svg xmlns="http://www.w3.org/2000/svg" width="278" height="100" viewBox="0 0 278 100" role="img" aria-label="HQ high bitrate">
+  <path d="M6 18h28M6 18v19M6 82h28M6 82V63" fill="none" stroke="#F5C451" stroke-width="6" stroke-linecap="round"/>
+  <text x="25" y="74" fill="#F5C451" font-family="Arial Black,Arial,Helvetica,sans-serif" font-size="76" font-weight="900" letter-spacing="-6">HQ</text>
+  <path d="M139 22v56" stroke="#F5C451" stroke-width="3" stroke-linecap="round"/>
+  <text x="155" y="45" fill="#FFFFFF" font-family="Arial,Helvetica,sans-serif" font-size="22" font-weight="900" letter-spacing="2">HIGH</text>
+  <text x="155" y="73" fill="#FFFFFF" font-family="Arial,Helvetica,sans-serif" font-size="22" font-weight="900" letter-spacing="1">BITRATE</text>
+</svg>'''
+
+
+def hdr_vivid_badge() -> str:
+    return '''<svg xmlns="http://www.w3.org/2000/svg" width="292" height="100" viewBox="0 0 292 100" role="img" aria-label="HDR Vivid">
+  <defs><linearGradient id="vivid" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#26D9FF"/><stop offset=".5" stop-color="#A65CFF"/><stop offset="1" stop-color="#FF4D7D"/></linearGradient></defs>
+  <text x="0" y="72" fill="url(#vivid)" font-family="Arial Black,Arial,Helvetica,sans-serif" font-size="70" font-weight="900" letter-spacing="-5">HDR</text>
+  <text x="151" y="68" fill="#FFFFFF" font-family="Arial,Helvetica,sans-serif" font-size="44" font-weight="900" letter-spacing="-2">VIVID</text>
 </svg>'''
 
 
 (TECHNICAL_DIR / "60-fps.svg").write_text(fps_badge(60), encoding="utf-8")
 (TECHNICAL_DIR / "120-fps.svg").write_text(fps_badge(120), encoding="utf-8")
 (TECHNICAL_DIR / "flac.svg").write_text(flac_badge(), encoding="utf-8")
+(TECHNICAL_DIR / "hq.svg").write_text(hq_badge(), encoding="utf-8")
+(TECHNICAL_DIR / "hdr-vivid.svg").write_text(hdr_vivid_badge(), encoding="utf-8")
 
 
 for index, item in enumerate(streaming_filters):
     name = item.get("name", "")
-    card = None
+    badge = None
+    if name == "Netflix":
+        badge = netflix_badge()
+    elif name == "iTunes":
+        badge = itunes_badge()
     transparent_logo = TRANSPARENT_SVG_LOGOS.get(name)
     if transparent_logo:
         logo_file, logo_url, width, height = transparent_logo
@@ -301,7 +344,7 @@ for index, item in enumerate(streaming_filters):
         try:
             if not cache_path.exists():
                 cache_path.write_bytes(fetch_bytes(logo_url))
-            card = transparent_white_logo(name, cache_path.read_bytes(), width, height)
+            badge = transparent_white_logo(name, cache_path.read_bytes(), width, height)
         except Exception as exc:
             print(f"[transparent vector logo fallback] {name}: {exc}")
     vector_logo = SVG_LOGOS.get(name)
@@ -311,7 +354,7 @@ for index, item in enumerate(streaming_filters):
         try:
             if not cache_path.exists():
                 cache_path.write_bytes(fetch_bytes(logo_url))
-            card = image_card(name, cache_path.read_bytes(), "image/svg+xml")
+            badge = transparent_image_badge(name, cache_path.read_bytes(), "image/svg+xml")
         except Exception as exc:
             print(f"[vector logo fallback] {name}: {exc}")
     logo_file = PNG_LOGOS.get(name)
@@ -320,12 +363,13 @@ for index, item in enumerate(streaming_filters):
         try:
             if not cache_path.exists():
                 cache_path.write_bytes(fetch_bytes(LOGO_ROOT + logo_file))
-            card = image_card(name, cache_path.read_bytes(), "image/png")
+            if name not in {"Netflix", "iTunes"}:
+                badge = transparent_image_badge(name, cache_path.read_bytes(), "image/png")
         except Exception as exc:
             print(f"[logo fallback] {name}: {exc}")
-    if card is None:
-        card = wordmark_card(name)
-    (STREAMING_DIR / f"stream-{index:03d}.svg").write_text(card, encoding="utf-8")
+    if badge is None:
+        badge = transparent_wordmark(name)
+    (STREAMING_DIR / f"stream-{index:03d}.svg").write_text(badge, encoding="utf-8")
 
 
 provider_module = r'''"use strict";
@@ -626,7 +670,7 @@ app.get("/badges.json", (req, res) => {
   const technicalAssets = {
     FLAC: "flac.svg",
   };
-  const assetUrl = (folder, asset) => `${origin}/badges/${folder}/${asset}?v=3.0.3`;
+  const assetUrl = (folder, asset) => `${origin}/badges/${folder}/${asset}?v=3.0.4`;
   const baseFilters = badgeBase.filters.map((filter) => {
     if (filter.groupId === "gs") {
       const asset = `stream-${String(streamIndex++).padStart(3, "0")}.svg`;
@@ -636,9 +680,12 @@ app.get("/badges.json", (req, res) => {
     if (technicalAsset) {
       return { ...filter, imageURL: assetUrl("technical-fixed", technicalAsset) };
     }
+    if (filter.name === "HDR (新导入)") {
+      return { ...filter, pattern: "(?i)\\bhdr\\b(?![ ._-]*vivid)" };
+    }
     return filter;
   });
-  const frameRateFilters = [
+  const customFilters = [
     {
       type: "filter",
       id: "fps-120",
@@ -651,6 +698,32 @@ app.get("/badges.json", (req, res) => {
       imageURL: assetUrl("technical-fixed", "120-fps.svg"),
       isEnabled: true,
       groupId: "gfr",
+    },
+    {
+      type: "filter",
+      id: "quality-hq",
+      name: "HQ High Bitrate",
+      pattern: "(?i)(?<![A-Za-z0-9])hq(?![A-Za-z0-9])",
+      tagColor: "#00000000",
+      borderColor: "#00000000",
+      textColor: "#FFFFFF",
+      tagStyle: "filled",
+      imageURL: assetUrl("technical-fixed", "hq.svg"),
+      isEnabled: true,
+      groupId: "gst",
+    },
+    {
+      type: "filter",
+      id: "video-hdr-vivid",
+      name: "HDR Vivid",
+      pattern: "(?i)(?<![A-Za-z0-9])hdr[ ._-]*vivid(?![A-Za-z0-9])",
+      tagColor: "#00000000",
+      borderColor: "#00000000",
+      textColor: "#FFFFFF",
+      tagStyle: "filled",
+      imageURL: assetUrl("technical-fixed", "hdr-vivid.svg"),
+      isEnabled: true,
+      groupId: "video-tech",
     },
     {
       type: "filter",
@@ -680,7 +753,7 @@ app.get("/badges.json", (req, res) => {
       frameRateGroup,
       ...badgeBase.groups.slice(2),
     ],
-    filters: [...baseFilters, ...frameRateFilters],
+    filters: [...baseFilters, ...customFilters],
   };
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Cache-Control", "public, s-maxage=300, stale-while-revalidate=86400");
