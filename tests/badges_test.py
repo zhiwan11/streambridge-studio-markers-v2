@@ -36,19 +36,20 @@ assert "data:image/png;base64," in svg("Amazon Prime Video")
 assert "data:image/png;base64," in svg("Crunchyroll")
 assert 'aria-label="Netflix"' in svg("Netflix")
 assert "#E50914" in svg("Netflix")
-assert 'd="M14 18' in svg("Netflix")
-assert 'aria-label="iTunes movies and TV"' in svg("iTunes")
+assert 'width="86"' in svg("Netflix")
+assert 'm5.398 0 8.348 23.602' in svg("Netflix")
+assert 'aria-label="iTunes"' in svg("iTunes")
 assert "iTunes" in svg("iTunes")
-assert "data:image/png;base64," in svg("iTunes")
+assert "data:image" not in svg("iTunes")
+assert "apple-only" not in svg("iTunes")
 assert "linearGradient" not in svg("iTunes")
 assert "data:image/svg+xml;base64," in svg("哔哩哔哩")
 assert "<text" not in svg("哔哩哔哩")
 bluray_svg = svg("Blu-ray Disc")
-assert 'width="340"' in bluray_svg
+assert 'width="300"' in bluray_svg
 assert 'height="100"' in bluray_svg
-assert "BLU-RAY" in bluray_svg
-assert "#27B9F2" in bluray_svg
-assert "data:image" not in bluray_svg
+assert "data:image/png;base64," in bluray_svg
+assert "<text" not in bluray_svg
 
 ultra_bluray_svg = svg("Ultra HD Blu-ray")
 assert "data:image/svg+xml;base64," in ultra_bluray_svg
@@ -63,14 +64,19 @@ assert 'height="100"' in svg("Ultra HD Blu-ray")
 for technical_asset in ("60-fps.svg", "120-fps.svg", "flac.svg", "hq.svg", "hdr-vivid.svg"):
     technical_svg = (technical_dir / technical_asset).read_text(encoding="utf-8")
     assert technical_svg.startswith("<svg")
-    assert "#FFFFFF" in technical_svg
+    if technical_asset != "hq.svg":
+        assert "#FFFFFF" in technical_svg
     assert 'href="http://' not in technical_svg
     assert 'href="https://' not in technical_svg
 
 assert 'aria-label="60 FPS"' in (technical_dir / "60-fps.svg").read_text(encoding="utf-8")
 assert 'aria-label="120 FPS"' in (technical_dir / "120-fps.svg").read_text(encoding="utf-8")
 assert "FLAC" in (technical_dir / "flac.svg").read_text(encoding="utf-8")
-assert "QUALITY" in (technical_dir / "hq.svg").read_text(encoding="utf-8")
+hq_svg = (technical_dir / "hq.svg").read_text(encoding="utf-8")
+assert ">HQ</text>" in hq_svg
+assert "QUALITY" not in hq_svg
+assert "HIGH" not in hq_svg
+assert "<path" not in hq_svg
 assert "VIVID" in (technical_dir / "hdr-vivid.svg").read_text(encoding="utf-8")
 
 print("badges_test.py: 144 provider/disc + 5 technical badges passed")

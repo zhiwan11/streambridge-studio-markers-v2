@@ -37,14 +37,14 @@ Domestic vector sources: [iQIYI](https://commons.wikimedia.org/wiki/File:IQIYI_l
 credited to Beijing Danmu Network Technology Co., Ltd. under CC BY 2.5; the
 other listed wordmarks are public-domain text/geometric logos on Commons.
 
-The v3.0.5 configuration self-hosts transparent, high-contrast technical marks
+The v3.0.6 configuration self-hosts transparent, high-contrast technical marks
 for `60 FPS`, `120 FPS`, `FLAC`, `HQ`, and `HDR Vivid`. The frame-rate rules recognize both
 integer and common fractional rates (`59.94` and `119.88`) without matching
 ordinary numbers elsewhere in the source name.
 
 All 144 source/provider assets use transparent canvases with enlarged brand
-artwork. The build rejects the former rounded card background, provides an
-Apple + iTunes movie/TV lockup, and keeps artwork readable in light and dark UI.
+artwork. The build rejects the former rounded card background, uses an icon-free
+iTunes wordmark, and keeps artwork readable in light and dark UI.
 
 ## Build and test
 
